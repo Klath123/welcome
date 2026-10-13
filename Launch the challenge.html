@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Launch the challenge</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+:root{--void:#07060d;--cyan:#19e3ff;--hot:#ff2e63;--paper:#f2f0ff;--dim:#8d89a8;
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--void);color:var(--paper);overflow:hidden;font-family:"JetBrains Mono",ui-monospace,monospace}
+canvas{position:fixed;inset:0;width:100%;height:100%}
+.vig{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 35%,rgba(7,6,13,.92) 100%)}
+.scan{position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px)}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none}
+#flash.on{animation:flash .5s ease-out}
+@keyframes flash{0%{opacity:.5}100%{opacity:0}}
+main{position:relative;height:100%;display:grid;place-items:center;text-align:center;padding:24px}
+.layer{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:18px;padding:24px;transition:opacity .5s,transform .5s,filter .5s}
+.layer.out{opacity:0;transform:scale(1.25);filter:blur(12px);pointer-events:none}
+.hidden{opacity:0;pointer-events:none}
+h1{font:700 clamp(2.4rem,9vw,6.5rem)/.95 "Chakra Petch",sans-serif;letter-spacing:-.01em;margin:0}
+.sub{color:var(--dim);max-width:34ch;line-height:1.6;margin:0;font-size:.95rem}
+#go{position:relative;font:700 1.5rem "Chakra Petch",sans-serif;color:var(--void);background:linear-gradient(110deg,var(--cyan),#8a6bff,var(--hot),var(--cyan));background-size:300% 100%;animation:flow 4s linear infinite;border:0;padding:26px 68px;cursor:pointer;
+ clip-path:polygon(22px 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%,0 22px);transition:transform .15s;letter-spacing:.05em}
+@keyframes flow{to{background-position:300% 0}}
+#go:hover{transform:scale(1.08);animation-duration:1s}
+#go:active{transform:scale(.9)}
+.btnwrap::before,.btnwrap::after{content:"";position:absolute;width:34px;height:34px;border:3px solid var(--paper);transition:transform .25s;pointer-events:none}
+.btnwrap::before{left:-4px;top:-4px;border-right:0;border-bottom:0}
+.btnwrap::after{right:-4px;bottom:-4px;border-left:0;border-top:0}
+.btnwrap:hover::before{transform:translate(-10px,-10px)}.btnwrap:hover::after{transform:translate(10px,10px)}
+#go:focus-visible{outline:3px solid var(--paper);outline-offset:6px}
+.pulse{position:absolute;width:260px;height:260px;border-radius:50%;border:2px solid var(--cyan);opacity:0;pointer-events:none;animation:pulse 2.8s infinite}
+@keyframes pulse{0%{transform:scale(.4);opacity:.7}100%{transform:scale(2.6);opacity:0}}
+.btnwrap{position:relative;display:grid;place-items:center;margin-top:18px;padding:18px;background:radial-gradient(closest-side,rgba(25,227,255,.22),transparent)}
+#term{align-content:center;justify-items:start;max-width:560px;margin:auto;text-align:left;font-size:.9rem;line-height:1.9}
+#term div{opacity:0;animation:in .15s forwards;white-space:pre-wrap}
+#term .ok{color:var(--cyan)}#term .bad{color:var(--hot)}
+@keyframes in{to{opacity:1}}
+#count{font:700 clamp(8rem,38vw,24rem)/1 "Chakra Petch",sans-serif;color:var(--paper);text-shadow:-4px 0 var(--hot),4px 0 var(--cyan)}
+#count.tick{animation:tick 1.3s ease-out}
+@keyframes tick{0%{transform:scale(2.4);opacity:0;filter:blur(18px)}25%{opacity:1;filter:blur(0)}100%{transform:scale(.85);opacity:.15}}
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-t);position:absolute;inset:0}
+.glitch::before{color:var(--hot);animation:g1 .9s infinite steps(1);mix-blend-mode:screen}
+.glitch::after{color:var(--cyan);animation:g2 .7s infinite steps(1);mix-blend-mode:screen}
+@keyframes g1{0%{clip-path:inset(10% 0 70% 0);transform:translate(-6px)}20%{clip-path:inset(60% 0 10% 0);transform:translate(6px)}40%{clip-path:inset(30% 0 40% 0);transform:translate(-3px)}60%{clip-path:inset(80% 0 2% 0);transform:translate(4px)}80%{clip-path:inset(0 0 85% 0);transform:translate(-5px)}100%{clip-path:inset(45% 0 35% 0);transform:translate(0)}}
+@keyframes g2{0%{clip-path:inset(70% 0 5% 0);transform:translate(6px)}25%{clip-path:inset(5% 0 80% 0);transform:translate(-6px)}50%{clip-path:inset(40% 0 30% 0);transform:translate(3px)}75%{clip-path:inset(20% 0 60% 0);transform:translate(-4px)}100%{clip-path:inset(65% 0 15% 0);transform:translate(0)}}
+
+.rays{position:absolute;left:50%;top:50%;width:120vmax;height:120vmax;margin:-60vmax 0 0 -60vmax;background:repeating-conic-gradient(rgba(25,227,255,.2) 0 6deg,transparent 6deg 18deg);-webkit-mask:radial-gradient(circle closest-side,#000 0,transparent 30%);mask:radial-gradient(circle closest-side,#000 0,transparent 30%);animation:spin 14s linear infinite;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.live{position:relative;margin:0;font:700 clamp(3.4rem,17vw,13rem)/.85 "Chakra Petch",sans-serif}
+.live .ln{display:block}
+.live i{font-style:normal;display:inline-block;animation:slam 1.15s cubic-bezier(.2,1.5,.3,1) backwards;animation-delay:calc(var(--i)*85ms);text-shadow:-5px 0 var(--hot),5px 0 var(--cyan)}
+@keyframes slam{0%{transform:translateY(-120vh) scale(3) rotate(-20deg);opacity:0}60%{opacity:1}100%{transform:none}}
+.live.jit{animation:jit 1.6s infinite steps(1)}
+.live i.gl{transform:translate(7px,-4px) skewX(14deg);color:var(--hot)}
+#hero h1{animation:hg 3.5s infinite steps(1)}
+@keyframes hg{0%,90%,100%{transform:none;text-shadow:none}92%{transform:translate(-6px,2px) skewX(-8deg);text-shadow:4px 0 var(--hot),-4px 0 var(--cyan)}95%{transform:translate(5px,-2px);text-shadow:-4px 0 var(--hot),4px 0 var(--cyan)}}
+@keyframes jit{0%,88%{transform:none}90%{transform:translate(8px,-3px) skewX(6deg)}92%{transform:translate(-9px,2px) skewX(-6deg)}94%{transform:translate(4px,0)}96%{transform:none}}
+.bar{height:4px;width:0;background:linear-gradient(90deg,var(--cyan),var(--hot));box-shadow:0 0 24px var(--cyan);animation:bar 1s .9s forwards}
+@keyframes bar{to{width:min(80vw,640px)}}
+#tear{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+#tear i{position:absolute;left:0;width:100%;background:var(--cyan);opacity:.6}
+.ring{position:fixed;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:3px solid var(--cyan);pointer-events:none;animation:ring 1s ease-out forwards}
+@keyframes ring{to{transform:scale(60);opacity:0;border-width:1px}}
+body.shake main{animation:shake .85s}
+body.mega main{animation:shake 1.4s}
+@keyframes shake{10%{transform:translate(-14px,6px) rotate(-.6deg)}20%{transform:translate(12px,-8px) rotate(.5deg)}30%{transform:translate(-10px,-6px)}40%{transform:translate(9px,8px) rotate(-.4deg)}50%{transform:translate(-7px,3px)}60%{transform:translate(6px,-4px)}80%{transform:translate(-3px,2px)}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){body.shake main,body.mega main{animation:none}#go::before,.pulse,.glitch::before,.glitch::after{animation:none}#flash.on{animation-duration:.2s}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas><div class="vig"></div><div class="scan"></div><div id="flash"></div><div id="tear"></div>
+<main>
+  <section class="layer" id="hero">
+    <h1>Ready to break it?</h1>
+    <p class="sub">Eight challenges. One flag each. The clock starts the moment you press.</p>
+    <div class="btnwrap"><span class="pulse"></span><span class="pulse" style="animation-delay:1.4s"></span><button id="go">Start the challenge</button></div>
+  </section>
+  <section class="layer hidden" id="term"></section>
+  <section class="layer hidden" id="cd"><div id="count"></div></section>
+  <section class="layer hidden" id="end">
+    <div class="rays"></div><h1 class="live" id="live"></h1><div class="bar"></div>
+  </section>
+</main>
+<script>
+const cv=document.getElementById('c'),cx=cv.getContext('2d'),$=id=>document.getElementById(id);
+const chars="01{}<>/\\#$%&*+=ｱｲｳｴｵｶｷｸｹｺ";let W,H,cols,drops,size=16,speed=.4,hue=185,parts=[];
+function fit(){W=cv.width=innerWidth;H=cv.height=innerHeight;size=20;cols=Math.ceil(W/size);drops=Array.from({length:cols},()=>Math.random()*-60)}
+addEventListener('resize',fit);fit();
+function loop(){
+  cx.fillStyle='rgba(7,6,13,.13)';cx.fillRect(0,0,W,H);cx.font=size+'px "JetBrains Mono",monospace';
+  for(let i=0;i<cols;i++){
+    const x=i*size,y=drops[i]*size,ch=chars[Math.random()*chars.length|0];
+    cx.fillStyle='#fff';cx.fillText(ch,x,y);
+    cx.fillStyle='hsla('+hue+',100%,60%,.85)';cx.fillText(chars[Math.random()*chars.length|0],x,y-size);
+    drops[i]+=speed*(.4+((i*7)%5)/5);
+    if(y>H&&Math.random()>.975)drops[i]=Math.random()*-20;
+  }
+  parts=parts.filter(p=>p.l>0);
+  for(const p of parts){p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.l--;cx.fillStyle='hsla('+p.h+',100%,65%,'+p.l/90+')';cx.fillRect(p.x,p.y,p.s,p.s)}
+  requestAnimationFrame(loop);
+}
+loop();
+function burst(n=140){const d=1;for(let i=0;i<n;i++){const a=Math.random()*6.283,v=(3+Math.random()*14)*d;parts.push({x:W/2,y:H/2,vx:Math.cos(a)*v,vy:Math.sin(a)*v-3*d,s:(2+Math.random()*4)*d,l:60+Math.random()*30,h:Math.random()<.5?185:345})}}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function flash(){const f=$('flash');f.classList.remove('on');void f.offsetWidth;f.classList.add('on')}
+function ring(){const r=document.createElement('div');r.className='ring';if(hue>300)r.style.borderColor='#ff2e63';document.body.appendChild(r);setTimeout(()=>r.remove(),1100)}
+function tear(){const t=$('tear');for(let i=0;i<4;i++){const b=document.createElement('i');b.style.top=Math.random()*100+'%';b.style.height=(2+Math.random()*7)+'%';b.style.transform='translateX('+((Math.random()-.5)*40)+'vw)';t.appendChild(b)}setTimeout(()=>t.innerHTML='',200)}
+async function decode(el,text){for(let k=0;k<=text.length;k++){let s=text.slice(0,k);for(let j=k;j<text.length;j++)s+=chars[Math.random()*chars.length|0];el.textContent=s;await sleep(40)}}
+function hit(cls='shake'){document.body.classList.remove('shake','mega');void document.body.offsetWidth;document.body.classList.add(cls);flash();ring();tear();cv.style.transition='none';cv.style.transform='scale(1.25)';void cv.offsetWidth;cv.style.transition='transform .7s ease-out';cv.style.transform='none'}
+function show(id){document.querySelectorAll('.layer').forEach(l=>{if(l.id!==id)l.classList.add('hidden')});const e=$(id);e.classList.remove('hidden','out')}
+async function type(el,text,ms){el.textContent='';for(const c of text){el.textContent+=c;await sleep(ms)}}
+let busy=false;
+async function launch(){
+  if(busy)return;busy=true;
+  hit('shake');speed=1.6;$('hero').classList.add('out');await sleep(450);
+  const t=$('term');t.innerHTML='';show('term');
+  const lines=[['> tunnel to ctf.node-07 ... ok','ok'],['> 8 containers armed','ok'],['> scoreboard synced','ok'],['> WARNING: timer cannot be paused','bad']];
+  for(const [txt,c] of lines){const d=document.createElement('div');d.textContent=txt;if(c)d.className=c;t.appendChild(d);speed+=.15;await sleep(230)}
+  await sleep(350);
+  show('cd');
+  for(const n of [3,2,1]){
+    const c=$('count');c.textContent=n;c.classList.remove('tick');void c.offsetWidth;c.classList.add('tick');
+    hue=n===1?345:n===2?280:185;speed=2.4+(3-n)*1.4;hit(n===1?'mega':'shake');await sleep(1300);
+  }
+  hit('mega');burst(150);await sleep(80);burst(90);hue=185;speed=.6;
+  show('end');
+  const L=$('live');let k=0;L.innerHTML=['CHALLENGE','LIVE'].map(w=>'<span class="ln">'+[...w].map(c=>'<i style="--i:'+(k++)+'">'+c+'</i>').join('')+'</span>').join('');
+  setTimeout(ring,150);setTimeout(ring,300);setTimeout(()=>{hit('shake');burst(60)},900);
+  setTimeout(()=>L.classList.add('jit'),1800);
+  setInterval(()=>{const a=L.querySelectorAll('i'),e=a[Math.random()*a.length|0],o=e.textContent;e.classList.add('gl');e.textContent=chars[Math.random()*chars.length|0];setTimeout(()=>{e.classList.remove('gl');e.textContent=o},140)},260);
+  setInterval(tear,1400);
+}
+$('go').addEventListener('click',launch);
+
+</script>
+</body>
+</html>
